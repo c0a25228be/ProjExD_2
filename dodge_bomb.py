@@ -1,9 +1,9 @@
+import math
 import os
+import pygame as pg
 import random
 import sys
-import pygame as pg
 import time
-import math
 
 
 WIDTH, HEIGHT = 1100, 650
