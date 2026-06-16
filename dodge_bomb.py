@@ -69,11 +69,35 @@ def init_bb_imgs() -> tuple[list[pg.Surface], list[int]]:
     bb_accs = [a for a in range(1, 11)]
     return bb_imgs, bb_accs
 
+def get_kk_imgs() -> dict[tuple[int, int], pg.Surface]:
+    """
+    移動量タプルと対応する画像Surfaceの辞書を返す関数
+    引数: None
+    戻り値: 辞書（キー：移動量のタプル、値：rotozoomした画像Surface）
+    """
+    base_img = pg.image.load("fig/3.png")
+    flip_img = pg.transform.flip(base_img, True, False)
+    
+    kk_dict = {
+        (0, 0): pg.transform.rotozoom(base_img, 0, 0.9),
+        (-5, 0): pg.transform.rotozoom(base_img, 0, 0.9),
+        (-5, -5): pg.transform.rotozoom(base_img, -45, 0.9),
+        (0, -5): pg.transform.rotozoom(flip_img, 90, 0.9),
+        (+5, -5): pg.transform.rotozoom(flip_img, 45, 0.9),
+        (+5, 0): pg.transform.rotozoom(flip_img, 0, 0.9),
+        (+5, +5): pg.transform.rotozoom(flip_img, -45, 0.9),
+        (0, +5): pg.transform.rotozoom(flip_img, -90, 0.9),
+        (-5, +5): pg.transform.rotozoom(base_img, 45, 0.9),
+    }
+    return kk_dict
+
 def main():
     pg.display.set_caption("逃げろ！こうかとん")
     screen = pg.display.set_mode((WIDTH, HEIGHT))
     bg_img = pg.image.load("fig/pg_bg.jpg")    
     kk_img = pg.transform.rotozoom(pg.image.load("fig/3.png"), 0, 0.9)
+    kk_imgs = get_kk_imgs()
+    kk_img = kk_imgs[(0, 0)]
     kk_rct = kk_img.get_rect()
     kk_rct.center = 300, 200
     clock = pg.time.Clock()
@@ -123,6 +147,8 @@ def main():
         if check_bound(kk_rct) != (True, True):
             kk_rct.move_ip(-sum_mv[0], -sum_mv[1])  #更新前のに位置に戻す
         screen.blit(kk_img, kk_rct)
+
+        kk_img = kk_imgs[tuple(sum_mv)]
 
         idx = min(tmr // 500, 9)
         avx = vx * bb_accs[idx]
