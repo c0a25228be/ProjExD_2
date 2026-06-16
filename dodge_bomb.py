@@ -3,6 +3,7 @@ import random
 import sys
 import pygame as pg
 import time
+import math
 
 
 WIDTH, HEIGHT = 1100, 650
@@ -91,6 +92,27 @@ def get_kk_imgs() -> dict[tuple[int, int], pg.Surface]:
     }
     return kk_dict
 
+def calc_orientation(org: pg.Rect, dst: pg.Rect, current_xy: tuple[float, float])-> tuple[float, float]:
+    """
+    爆弾から見て、こうかとんRectがある方向、すなわち移動すべき方向ベクトルを返す関数
+    引数: org (爆弾のRect), dst (こうかとんのRect), current_xy (計算前の方向ベクトル)
+    戻り値: 正規化された方向ベクトル (vx, vy)
+    """
+    dx = dst.centerx - org.centerx
+    dy = dst.centery - org.centery
+    dist = math.hypot(dx, dy)
+
+    if dist < 300:
+        return current_xy
+    
+    if dist != 0:
+        vx: float = dx / dist * math.sqrt(50)
+        vy: float = dy / dist * math.sqrt(50)
+    else:
+        vx, vy = current_xy
+        
+    return vx, vy
+
 def main():
     pg.display.set_caption("逃げろ！こうかとん")
     screen = pg.display.set_mode((WIDTH, HEIGHT))
@@ -149,6 +171,8 @@ def main():
         screen.blit(kk_img, kk_rct)
 
         kk_img = kk_imgs[tuple(sum_mv)]
+
+        vx, vy = calc_orientation(bb_rct, kk_rct, (vx, vy))
 
         idx = min(tmr // 500, 9)
         avx = vx * bb_accs[idx]
