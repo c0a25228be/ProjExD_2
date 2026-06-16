@@ -16,6 +16,7 @@ DELTA = {
 
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
+
 def check_bound(rct: pg.Rect) -> tuple[bool, bool]:
     """
     引数：こうかとんRectまたは爆弾Rect
@@ -28,6 +29,7 @@ def check_bound(rct: pg.Rect) -> tuple[bool, bool]:
     if rct.top < 0 or HEIGHT < rct.bottom:
         tate = False
     return yoko, tate
+
 
 def gameover(screen: pg.Surface) -> None:
     """
@@ -55,6 +57,7 @@ def gameover(screen: pg.Surface) -> None:
     pg.display.update()
     time.sleep(5)
 
+
 def init_bb_imgs() -> tuple[list[pg.Surface], list[int]]:
     """
     10段階の大きさを変えた爆弾Surfaceのリストと加速度のリストを準備する関数
@@ -69,6 +72,7 @@ def init_bb_imgs() -> tuple[list[pg.Surface], list[int]]:
         bb_imgs.append(bb_img)
     bb_accs = [a for a in range(1, 11)]
     return bb_imgs, bb_accs
+
 
 def get_kk_imgs() -> dict[tuple[int, int], pg.Surface]:
     """
@@ -92,6 +96,7 @@ def get_kk_imgs() -> dict[tuple[int, int], pg.Surface]:
     }
     return kk_dict
 
+
 def calc_orientation(org: pg.Rect, dst: pg.Rect, current_xy: tuple[float, float])-> tuple[float, float]:
     """
     爆弾から見て、こうかとんRectがある方向、すなわち移動すべき方向ベクトルを返す関数
@@ -112,6 +117,7 @@ def calc_orientation(org: pg.Rect, dst: pg.Rect, current_xy: tuple[float, float]
         vx, vy = current_xy
         
     return vx, vy
+
 
 def main():
     pg.display.set_caption("逃げろ！こうかとん")
